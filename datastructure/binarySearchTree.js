@@ -1,7 +1,7 @@
 export class Tree {
     constructor(arr) {
         let cleaned = removeDuplicates(mergeSort(arr));
-        this.root = buildTree(cleaned);
+        this.root = this.buildTree(cleaned);
     }
 
     buildTree(arr) {
