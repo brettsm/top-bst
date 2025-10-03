@@ -1,0 +1,14 @@
+{
+  "name": "top-bst",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Binary Search Tree creation as part of The Odin Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
