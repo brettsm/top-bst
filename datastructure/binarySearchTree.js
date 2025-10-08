@@ -47,7 +47,7 @@ export class Tree {
         if (node.right !== null) {
             this.printTree(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
         }
-        console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+        console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.value}`);
         if (node.left !== null) {
             this.printTree(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }
