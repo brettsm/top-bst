@@ -1,13 +1,14 @@
 import { Queue } from "./queue.js";
 
 export class Tree {
-    constructor(arr) {
+    constructor(arr, allowDup = false) {
+        this.allowDup = allowDup;
         let cleaned = removeDuplicates(mergeSort(arr));
         console.log(cleaned);
-        this.root = this.buildTree(cleaned);
+        this.root = this._buildTree(cleaned);
     }
 
-    buildTree(arr) {
+    _buildTree(arr) {
         if (arr.length < 1) return null;
         const mid = Math.floor((arr.length - 1) / 2);
 
@@ -39,6 +40,46 @@ export class Tree {
         }
         
         return root;
+    }
+
+    insert(value) {
+        const inserted = new Node(value);
+
+        if (this.root === null) {
+            this.root = inserted;
+            return true;
+        }
+
+
+        let parent = null;
+        let curr = this.root;
+        while (curr !== null) {
+            parent = curr;
+            if (curr.value > value) {
+                curr = curr.left;
+            } else if (curr.value < value) {
+                curr = curr.right;
+            } else {
+                if (!this.allowDup) return false; // means curr.value === value (key already exists)
+                // place dups to the right
+                curr = curr.right;
+                if(!curr) { parent.right = inserted; this._size++; return true };
+            }
+        }
+
+        // If x is smaller, make it left child, else right child
+        if (parent.value > value) {
+            parent.left = inserted;
+            return true;
+        } else {
+            parent.right = inserted;
+            return true;
+        }
+
+    }
+
+    deleteItem(value) {
+
     }
 
     printTree(node, prefix = '', isLeft = true) {
