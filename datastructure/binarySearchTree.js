@@ -3,6 +3,7 @@ import { Queue } from "./queue.js";
 export class Tree {
     constructor(arr) {
         let cleaned = removeDuplicates(mergeSort(arr));
+        console.log(cleaned);
         this.root = this.buildTree(cleaned);
     }
 
@@ -16,6 +17,7 @@ export class Tree {
         q.enqueue({n: root, s: 0, e: arr.length - 1});
         while (!q.isEmpty()) {
             let curr = q.dequeue();
+            console.log(curr);
             let node = curr.n;
             let start = curr.s;
             let end = curr.e;
@@ -43,27 +45,15 @@ export class Tree {
         if (node === null) return;
 
         if (node.right !== null) {
-            printTree(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+            this.printTree(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
         }
         console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
         if (node.left !== null) {
-            printTree(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+            this.printTree(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }
     }
-}
 
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node === null) {
-    return;
-  }
-  if (node.right !== null) {
-    prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  }
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-  if (node.left !== null) {
-    prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-  }
-};
+}
  
 class Node {
     constructor(value) {
@@ -89,7 +79,7 @@ function merge(left, right) {
     let i = 0, j = 0;
 
     while (i < left.length && j < right.length) {
-        if (left[0] < right[0]) {
+        if (left[i] < right[j]) {
             sortedArr.push(left[i++]);
         } else  {
             sortedArr.push(right[j++]);
