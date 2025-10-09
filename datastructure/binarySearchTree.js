@@ -139,6 +139,20 @@ export class Tree {
         return null;
     }
 
+    levelOrderForEach(callback) {
+        if (!this.root) return;
+
+        const q = new Queue();
+        q.enqueue(this.root);
+
+        while(!q.isEmpty()) {
+            let node = q.dequeue();
+            callback(node);
+            if(node.left) q.enqueue(node.left);
+            if(node.right) q.enqueue(node.right);
+        }
+    }
+
 }
  
 class Node {
