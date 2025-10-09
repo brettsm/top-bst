@@ -141,6 +141,7 @@ export class Tree {
 
     levelOrderForEach(callback) {
         if (!this.root) return;
+        if (!callback) throw new Error("Must provide parameter: callback");
 
         const q = new Queue();
         q.enqueue(this.root);
