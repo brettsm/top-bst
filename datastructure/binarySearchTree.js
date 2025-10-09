@@ -141,7 +141,7 @@ export class Tree {
 
     levelOrderForEach(callback) {
         if (!this.root) return;
-        if (!callback) throw new Error("Must provide parameter: callback");
+        if (typeof callback !== 'function') throw new Error("levelOrderForEach(callback) expects a function");
 
         const q = new Queue();
         q.enqueue(this.root);
@@ -152,6 +152,46 @@ export class Tree {
             if(node.left) q.enqueue(node.left);
             if(node.right) q.enqueue(node.right);
         }
+    }
+
+    inOrderForEach(callback) {
+        if (typeof callback !== 'function') 
+            throw new Error("inOrderForEach(callback) expects a function");
+        
+        const walk = (node) => {
+            if (!node) return;
+            walk(node.left);
+            callback(node);
+            walk(node.right);
+        }
+        walk(this.root);
+    }
+
+
+    preOrderForEach(callback) {
+        if (typeof callback !== 'function') 
+            throw new Error("preOrderForEach(callback) expects a function");
+        
+        const walk = (node) => {
+            if (!node) return;
+            callback(node);
+            walk(node.left);
+            walk(node.right);
+        }
+        walk(this.root);
+    }
+    
+    postOrderForEach(callback) {
+        if (typeof callback !== 'function') 
+            throw new Error("postOrderForEach(callback) expects a function");
+        
+        const walk = (node) => {
+            if (!node) return;
+            walk(node.left);
+            walk(node.right);
+            callback(node);
+        }
+        walk(this.root);
     }
 
 }
