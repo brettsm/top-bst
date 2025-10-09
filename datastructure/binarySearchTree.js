@@ -4,7 +4,6 @@ export class Tree {
     constructor(arr, allowDup = false) {
         this.allowDup = allowDup;
         let cleaned = removeDuplicates(mergeSort(arr));
-        console.log(cleaned);
         this.root = this._buildTree(cleaned);
     }
 
@@ -63,7 +62,7 @@ export class Tree {
                 if (!this.allowDup) return false; // means curr.value === value (key already exists)
                 // place dups to the right
                 curr = curr.right;
-                if(!curr) { parent.right = inserted; this._size++; return true };
+                if(!curr) { parent.right = inserted; return true };
             }
         }
 
@@ -79,7 +78,42 @@ export class Tree {
     }
 
     deleteItem(value) {
+        this.root = this._deleteNode(this.root, value);
+    }
 
+    _deleteNode(node, value) {
+        if (node === null) return null;
+
+        if (value < node.value) 
+            node.left = this._deleteNode(node.left, value);
+        else if (value > node.value) 
+            node.right = this._deleteNode(node.right, value);
+        else {
+            // If node matches with the given key
+
+            // 0 to 1 children handled
+            if (node.left === null) {
+                return node.right;
+            }
+
+            if (node.right === null) {
+                return node.left;
+            }
+
+            // 2 children
+            let succ = this._getSuccessor(node);
+            node.value = succ.value;
+            node.right = this._deleteNode(node.right, succ.value);
+        }
+        return node;
+    }
+
+
+    _getSuccessor(curr) {
+        if (!curr?.right) return null;
+        curr = curr.right;
+        while (curr.left) curr = curr.left;
+        return curr;
     }
 
     printTree(node, prefix = '', isLeft = true) {
@@ -92,6 +126,17 @@ export class Tree {
         if (node.left !== null) {
             this.printTree(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
         }
+    }
+
+    find(value) {
+        let curr = this.root;
+
+        while (curr) {
+            if (value === curr.value) return curr;
+            curr = value < curr.value ? curr.left : curr.right;
+        }
+
+        return null;
     }
 
 }
@@ -132,6 +177,8 @@ function merge(left, right) {
 
 
 function removeDuplicates(arr) {
+    if (arr.length === 0) return arr;
+
     let j = 0;
 
     for (let i = 1; i < arr.length; i++) {
