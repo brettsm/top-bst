@@ -1,7 +1,7 @@
 import { Queue } from "./queue.js";
 
 export class Tree {
-    constructor(arr, allowDup = false) {
+    constructor(arr = [], allowDup = false) {
         this.allowDup = allowDup;
         let cleaned = removeDuplicates(mergeSort(arr));
         this.root = this._buildTree(cleaned);
@@ -17,7 +17,6 @@ export class Tree {
         q.enqueue({n: root, s: 0, e: arr.length - 1});
         while (!q.isEmpty()) {
             let curr = q.dequeue();
-            console.log(curr);
             let node = curr.n;
             let start = curr.s;
             let end = curr.e;
@@ -141,7 +140,7 @@ export class Tree {
 
     levelOrderForEach(callback) {
         if (!this.root) return;
-        if (typeof callback !== 'function') throw new Error("levelOrderForEach(callback) expects a function");
+        if (typeof callback !== 'function') throw new TypeError("levelOrderForEach(callback) expects a function");
 
         const q = new Queue();
         q.enqueue(this.root);
@@ -156,7 +155,7 @@ export class Tree {
 
     inOrderForEach(callback) {
         if (typeof callback !== 'function') 
-            throw new Error("inOrderForEach(callback) expects a function");
+            throw new TypeError("inOrderForEach(callback) expects a function");
         
         const walk = (node) => {
             if (!node) return;
@@ -170,7 +169,7 @@ export class Tree {
 
     preOrderForEach(callback) {
         if (typeof callback !== 'function') 
-            throw new Error("preOrderForEach(callback) expects a function");
+            throw new TypeError("preOrderForEach(callback) expects a function");
         
         const walk = (node) => {
             if (!node) return;
@@ -180,10 +179,10 @@ export class Tree {
         }
         walk(this.root);
     }
-    
+
     postOrderForEach(callback) {
         if (typeof callback !== 'function') 
-            throw new Error("postOrderForEach(callback) expects a function");
+            throw new TypeError("postOrderForEach(callback) expects a function");
         
         const walk = (node) => {
             if (!node) return;
@@ -194,6 +193,61 @@ export class Tree {
         walk(this.root);
     }
 
+    height(value) {
+        const n = this.find(value);
+        return n ? this._nodeHeight(n) : null;
+    }
+
+    treeHeight() {
+        return this._nodeHeight(this.root);
+    }
+
+    _nodeHeight(node) {
+        if (!node) return -1;
+        const lh = this._nodeHeight(node.left);
+        const rh = this._nodeHeight(node.right);
+
+        return 1 + Math.max(lh, rh);
+    }
+
+    depth(value) {
+        let k = 0;
+        let curr = this.root;
+        while (curr) {
+            if (curr.value === value) return k;
+            curr = curr.value > value ? curr.left : curr.right;
+            k++;
+        }
+        return null;
+    }
+
+    isBalanced() {
+        return this._checkBalanced(this.root).ok;
+    } 
+
+    _checkBalanced(node) {
+        if (!node) return { h: -1, ok: true };           // empty subtree: height -1 (edges)
+
+        const L = this._checkBalanced(node.left);
+        if (!L.ok) return { h: 0, ok: false };           // early exit
+
+        const R = this._checkBalanced(node.right);
+        if (!R.ok) return { h: 0, ok: false };
+
+        const ok = Math.abs(L.h - R.h) <= 1;
+        return { h: 1 + Math.max(L.h, R.h), ok };
+    }
+
+    rebalance() {
+        const sort = [];
+        const callback = (node) => {
+            sort.push(node.value);
+        }
+        this.inOrderForEach(callback);
+        this.root = this._buildTree(sort);
+
+        return this;
+    }
 }
  
 class Node {
